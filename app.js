@@ -200,17 +200,22 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Hubo un problema interno en el servidor.' });
 });
 
-// Iniciar servidor
-app.listen(PORT, () => {
-    console.log(`\n=========================================`);
-    console.log(`🚀 Servidor corriendo exitosamente en el puerto ${PORT}`);
-    console.log(`📍 URL Base: http://localhost:${PORT}`);
-    console.log(`\nEndpoints disponibles:`);
-    console.log(`   POST  /api/estudiantes`);
-    console.log(`   GET   /api/estudiantes`);
-    console.log(`   GET   /api/estudiantes/:id`);
-    console.log(`   POST  /api/asistencias`);
-    console.log(`   GET   /api/asistencias/estudiante/:id`);
-    console.log(`   GET   /api/reportes/ausentismo`);
-    console.log(`=========================================\n`);
-});
+// Iniciar servidor solo si no estamos en un entorno serverless (como cuando se importa el archivo)
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`\n=========================================`);
+        console.log(`🚀 Servidor corriendo exitosamente en el puerto ${PORT}`);
+        console.log(`📍 URL Base: http://localhost:${PORT}`);
+        console.log(`\nEndpoints disponibles:`);
+        console.log(`   POST  /api/estudiantes`);
+        console.log(`   GET   /api/estudiantes`);
+        console.log(`   GET   /api/estudiantes/:id`);
+        console.log(`   POST  /api/asistencias`);
+        console.log(`   GET   /api/asistencias/estudiante/:id`);
+        console.log(`   GET   /api/reportes/ausentismo`);
+        console.log(`=========================================\n`);
+    });
+}
+
+// Exportar la app para que serverless-http pueda consumirla en Netlify
+module.exports = app;
