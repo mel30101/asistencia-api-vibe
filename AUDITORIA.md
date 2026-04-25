@@ -96,3 +96,23 @@ Se realizó una auditoría técnica profunda al código de la API de asistencia.
 3.  **Arquitectura:** Refactorizar el código siguiendo el patrón MVC (Model-View-Controller).
 4.  **Sanitización:** Usar librerías como `dompurify` o realizar escapado manual de caracteres.
 5.  **Persistencia:** Migrar el almacenamiento de arrays en memoria a una base de datos persistente.
+
+---
+
+## 5. Bugs confirmados por pruebas
+
+Esta sección convierte las hipótesis de la auditoría inicial en evidencia ejecutable, validando que los riesgos identificados no son solo teóricos, sino fallos reales detectados por la suite de pruebas automatizadas.
+
+### Lista de Hallazgos Confirmados
+
+*   **Prueba fallida:** 11. Rechazo si se intenta registrar al mismo estudiante en la misma fecha (Duplicado de Asistencia).
+    *   **Resultado esperado vs. Obtenido:** Se esperaba `409 Conflict`, se obtuvo `400 Bad Request`.
+    *   **Lo que revela:** Confirmación técnica del Hallazgo #7. La API carece de una distinción semántica en su manejo de errores, utilizando un código genérico (400) en lugar del estándar para conflictos de recursos (409). Esto dificulta la integración con frontends que dependan de códigos de estado precisos para lógica de negocio.
+
+### Resumen Ejecutivo de Pruebas
+*   **Tests pasados:** 14/15
+*   **Estado general:** ⚠️ **FAIL** (Debido a inconsistencia en contrato HTTP).
+
+### Conclusión de Ingeniería
+Un test en rojo es mucho más honesto que una auditoría manual porque elimina la subjetividad y el "sesgo de confirmación" del auditor humano. Mientras que un ojo humano puede interpretar una respuesta de error como "suficiente", una prueba automatizada expone la brecha exacta entre la especificación técnica y la realidad del código. Este resultado es un recordatorio crítico de las limitaciones del *Vibe Coding* sin supervisión: la velocidad de desarrollo proporcionada por la IA puede generar rápidamente una estructura que parece funcional, pero que falla en los detalles arquitectónicos y estándares de ingeniería que garantizan la robustez a largo plazo.
+
